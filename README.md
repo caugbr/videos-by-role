@@ -10,3 +10,6 @@ The first step is to create some new user roles via the VbR settings page. Each 
 The providers you can use will be visible above the text box.
 Just go to video page, copy the entire URL and paste into our text box. Click out to fire the onChange event.
 The fields and button bellow the text box will be available in a few seconds, then you can use the original title, thumbnail and embed the video into your post.
+
+## Access to the videos
+Only admins and users of the roles we created will be able to watch the videos. Administrators will have access to all of them, but other users will only see what their capabilities allow.
