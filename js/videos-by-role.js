@@ -112,25 +112,6 @@ window.addEventListener('load', function() {
     }
 });
 
-function getAspectRatio(width, height) {
-    const aspectRatio = width / height;  
-    if (isApproximatelyEqual(aspectRatio, 4 / 3)) {
-        return '4:3';
-    }
-    if (isApproximatelyEqual(aspectRatio, 16 / 9)) {
-        return '16:9';
-    }
-    if (isApproximatelyEqual(aspectRatio, 21 / 9)) {
-        return '21:9';
-    }
-    return 'unknown';
-}
-  
-function isApproximatelyEqual(a, b, epsilon = 0.05) {
-    const diff = Math.abs(a - b);
-    return diff <= epsilon;
-}
-
 function getVideoId(url) {
     for (const prov in vbrProviders) {
         if (vbrInfo.providers.includes(prov)) {
@@ -158,8 +139,8 @@ function addResponsivity(embed) {
     const height = / height="([^"]+)"/.test(embed) ? embed.match(/ height="([^"]+)"/)[1] : 0;
     let style = "";
     if (width && height) {
-        const [w, h] = getAspectRatio(width, height).split(':').map(e => Number(e));
-        style = ` style="--aspect-ratio: ${h / w};"`;
+        const ar = Number(height / width).toFixed(4);
+        style = ` style="--aspect-ratio: ${ar};"`;
         // remove width and height from embed code
         embed = embed.replace(/ width="[^"]+"/, '');
         embed = embed.replace(/ height="[^"]+"/, '');

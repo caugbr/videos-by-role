@@ -11,7 +11,7 @@ trait admin_page {
 		);
     }
     
-    public function admin_page() {
+    private function save_admin_page() {
         $msg = '';
         if (count($_POST) > 0) {
             if ($_POST['act'] == 'add-role') {
@@ -36,6 +36,11 @@ trait admin_page {
                 }
             }
         }
+        return $msg;
+    }
+    
+    public function admin_page() {
+        $msg = $this->save_admin_page();
         $roles = $this->get_roles();
         $caps = $this->get_capabilities();
         $providers = $this->get_providers();

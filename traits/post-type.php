@@ -66,7 +66,7 @@ trait post_type {
         }
     }
     
-    function add_video_meta_box() {
+    public function add_video_meta_box() {
         add_meta_box('vbr-video', __('Import video', 'vbr'), [$this, 'video_meta_box_html'], 'video', 'advanced');
     }
 
@@ -169,7 +169,7 @@ trait post_type {
         <?php
     }
 
-    function save_video_metadata($post_id) {
+    public function save_video_metadata($post_id) {
         if (!isset($_POST['vbr_video_nonce']) || ! wp_verify_nonce($_POST['vbr_video_nonce'], 'vbr_video_nonce')) {
             return;
         }

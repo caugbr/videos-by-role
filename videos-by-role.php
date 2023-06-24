@@ -225,7 +225,6 @@ class VideosByRole {
     </style>
     <?php
     }
-    
 }
 
 global $videos_by_role;
