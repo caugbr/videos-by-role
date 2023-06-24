@@ -54,7 +54,7 @@ trait admin_page {
             <?php } ?>
             <h1><?php _e('Vimeo videos by role', 'vbr') ?></h1>
             <p>
-                <?php _e('Create roles and embed videos organized by categories and restricted by user roles.', 'vbr'); ?>
+                <?php _e('Create roles and publish videos organized in categories and restricted by user roles.', 'vbr'); ?>
             </p>
             <h2><?php _e('User levels', 'vbr') ?></h2>
             <div class="user-levels">

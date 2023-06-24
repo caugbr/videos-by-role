@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Videos by role\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-24 20:57-0300\n"
+"POT-Creation-Date: 2023-06-24 20:59-0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Cau Guanabara <cauguanabara@gmail.com>\n"
 "Language-Team: Cau Guanabara <cauguanabara@gmail.com>\n"
@@ -38,7 +38,7 @@ msgid "Used providers successfully saved"
 msgstr ""
 
 #: ../traits/admin-page.php:57
-msgid "Create roles and embed videos organized by categories and restricted by user roles."
+msgid "Create roles and publish videos organized in categories and restricted by user roles."
 msgstr ""
 
 #: ../traits/admin-page.php:59
