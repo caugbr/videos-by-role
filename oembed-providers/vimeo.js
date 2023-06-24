@@ -1,5 +1,6 @@
 window.vbrProviders.vimeo = {
     name: "Vimeo",
+    url: "//www.vimeo.com",
     reUrl: /\bvimeo\.com\b/,
     reId: /.*[^0-9]?([0-9]{9})[^0-9]?.*/,
     getInfo(vid) {

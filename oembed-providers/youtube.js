@@ -1,5 +1,6 @@
 window.vbrProviders.youtube = {
     name: "YouTube",
+    url: "//www.youtube.com",
     reUrl: /\b(youtube\.com|youtu\.be)\b/,
     reId: /.*v=([^&]+).*/,
     getInfo(vid) {

@@ -1,11 +1,11 @@
 
 window.vbrProviders = {};
 
-function providerNames() {
+function providerLinks() {
     let provs = [];
     for (const prov in vbrProviders) {
         if (vbrInfo.providers.includes(prov)) {
-            provs.push(vbrProviders[prov].name);
+            provs.push(`<a href="${vbrProviders[prov].url}" target="_blank">${vbrProviders[prov].name}</a>`);
         }
     }
     return provs;
@@ -25,7 +25,8 @@ window.addEventListener('load', function() {
     }, true);
 
     const label = this.document.querySelector('label[for="vbr_video"]');
-    label.innerHTML = label.innerHTML.replace('%providers_list%', providerNames().join(', '));
+    const links = providerLinks().join(', ');
+    label.innerHTML = label.innerHTML.replace('%providers_list%', links);
 
     // get video info when user fill the video id or url
     const input = document.querySelector('input#vbr_video');

@@ -1,5 +1,6 @@
 window.vbrProviders.dailymotion = {
     name: "Dailymotion",
+    url: "//www.dailymotion.com",
     reUrl: /\bdailymotion\.com\b/,
     reId: /.*\/video\/([^&\/]+).*/,
     getInfo(vid) {
