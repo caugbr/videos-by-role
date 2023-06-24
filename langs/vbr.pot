@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Videos by role\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-24 19:36-0300\n"
+"POT-Creation-Date: 2023-06-24 20:57-0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Cau Guanabara <cauguanabara@gmail.com>\n"
 "Language-Team: Cau Guanabara <cauguanabara@gmail.com>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Generator: Poedit 3.3.1\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../traits/admin-page.php:6 ../traits/admin-page.php:50
+#: ../traits/admin-page.php:6 ../traits/admin-page.php:55
 msgid "Vimeo videos by role"
 msgstr ""
 
@@ -37,55 +37,59 @@ msgstr ""
 msgid "Used providers successfully saved"
 msgstr ""
 
-#: ../traits/admin-page.php:54
+#: ../traits/admin-page.php:57
+msgid "Create roles and embed videos organized by categories and restricted by user roles."
+msgstr ""
+
+#: ../traits/admin-page.php:59
 msgid "User levels"
 msgstr ""
 
-#: ../traits/admin-page.php:57
+#: ../traits/admin-page.php:62
 msgid "No levels yet"
 msgstr ""
 
-#: ../traits/admin-page.php:63
+#: ../traits/admin-page.php:68
 msgid "Remove"
 msgstr ""
 
-#: ../traits/admin-page.php:67
+#: ../traits/admin-page.php:72
 msgid "Slug:"
 msgstr ""
 
-#: ../traits/admin-page.php:68
+#: ../traits/admin-page.php:73
 msgid "Capabilities:"
 msgstr ""
 
-#: ../traits/admin-page.php:72
+#: ../traits/admin-page.php:77
 msgid "Create user level"
 msgstr ""
 
-#: ../traits/admin-page.php:77
+#: ../traits/admin-page.php:82
 msgid "Level name"
 msgstr ""
 
-#: ../traits/admin-page.php:81
+#: ../traits/admin-page.php:86
 msgid "Existent levels:"
 msgstr ""
 
-#: ../traits/admin-page.php:87
+#: ../traits/admin-page.php:92
 msgid "Capabilities"
 msgstr ""
 
-#: ../traits/admin-page.php:108
+#: ../traits/admin-page.php:113
 msgid "Create level"
 msgstr ""
 
-#: ../traits/admin-page.php:117
+#: ../traits/admin-page.php:122
 msgid "Supported video providers"
 msgstr ""
 
-#: ../traits/admin-page.php:122
+#: ../traits/admin-page.php:127
 msgid "Current providers"
 msgstr ""
 
-#: ../traits/admin-page.php:155
+#: ../traits/admin-page.php:160
 msgid "Save"
 msgstr ""
 
