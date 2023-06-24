@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: Videos by role
-Description: Plugin to organize videos into "video" post type with categories and user levels.
+Description: A plugin to organize videos in categories and restrict access to them by user roles.
 Version: 1.0
 Author: Cau Guanabara
 Author URI: 
 Text Domain: vbr
+Domain Path: /langs
 */
-
 
 include "traits/admin-page.php";
 include "traits/post-type.php";
@@ -17,10 +17,8 @@ class VideosByRole {
     use admin_page;
     use post_type;
 
-    var $categories;
-    var $roles;
-
     public function __construct() {
+        add_action('init', [$this, 'load_textdomain']);
         add_action('init', [$this, 'register_post_type']);
         add_action('add_meta_boxes_video', [$this, 'add_video_meta_box']);
         add_action('save_post_video', [$this, 'save_video_metadata']);
@@ -29,6 +27,10 @@ class VideosByRole {
         add_action('wp_ajax_thumbnail_url', [$this, 'thumbnail_url']);
         add_action('pre_get_posts', [$this, 'modify_video_query']);
         add_action('wp_head', [$this, 'responsive_video_css']);
+    }
+
+    function load_textdomain() {
+        load_plugin_textdomain('vbr', false, dirname(plugin_basename(__FILE__)) . '/langs'); 
     }
     
     public function enqueue_custom_script() {
@@ -56,11 +58,11 @@ class VideosByRole {
         }
     }
 
-    public function get_roles() {
+    private function get_roles() {
         return get_option('vbr_roles', []);
     }
 
-    public function get_capabilities() {
+    private function get_capabilities() {
         $roles = $this->get_roles();
         $caps = [];
         foreach ($roles as $info) {
@@ -73,7 +75,7 @@ class VideosByRole {
         return $caps;
     }
 
-    public function remove_role($role) {
+    private function remove_role($role) {
         $roles = $this->get_roles();
         $slug = sanitize_title($role);
         unset($roles[$slug]);
@@ -81,7 +83,7 @@ class VideosByRole {
         remove_role($slug);
     }
 
-    public function add_role($role, $caps) {
+    private function add_role($role, $caps) {
         $roles = $this->get_roles();
         $new_role_slug = sanitize_title($role);
         $new_caps = [];
@@ -97,22 +99,22 @@ class VideosByRole {
         }
     }
 
-    function role_exists($role) {
+    private function role_exists($role) {
         if (!empty($role)) {
             return wp_roles()->is_role($role);
         }
         return false;
     }
 
-    public function get_categories() {
+    private function get_categories() {
         return get_option('vbr_categories', []);
     }
 
-    public function get_providers() {
+    private function get_providers() {
         return get_option('vbr_providers', []);
     }
 
-    public function add_category($cat) {
+    private function add_category($cat) {
         $cats = $this->get_categories();
         $new_cat_slug = sanitize_title($cat);
         if (false === array_search($new_cat_slug, $cats)) {
@@ -126,7 +128,7 @@ class VideosByRole {
         return false;
     }
 
-    public function remove_category($role) {
+    private function remove_category($role) {
         $cats = $this->get_categories();
         $slug = sanitize_title($role) . "-videos";
         unset($cats[array_search($slug, $cats)]);
@@ -137,7 +139,7 @@ class VideosByRole {
         }
     }
 
-    public function remove_capability($role) {
+    private function remove_capability($role) {
         $cap = "watch_" . sanitize_title($role) . "_videos";
         $roles = $this->get_roles();
         foreach ($roles as $index => $role) {
@@ -158,7 +160,7 @@ class VideosByRole {
         wp_die(json_encode($meta));
     }
 
-    public function add_image($post_id, $url, $desc = '') {
+    private function add_image($post_id, $url, $desc = '') {
         if (!wp_verify_nonce($_POST['nonce'], 'videos-by-role')) {
             wp_die ('Invalid token');
         }
@@ -169,7 +171,7 @@ class VideosByRole {
         return $meta;
     }
 
-    public function get_allowed_cats() {
+    private function get_allowed_cats() {
         $user = wp_get_current_user();
         $allowed = [];
         foreach(array_keys($user->allcaps) as $cap) {
@@ -180,7 +182,7 @@ class VideosByRole {
         return $allowed;
     }
 
-    public function is_site_admin() {
+    private function is_site_admin() {
         return in_array('administrator', wp_get_current_user()->roles);
     }
 
