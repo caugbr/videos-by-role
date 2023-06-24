@@ -1,2 +1,2 @@
-# videos-by-role
-Wprdpress plugin to organize videos in categories and restrict access by user roles.
+# Videos by role
+A Wordpress plugin to organize videos in categories and restrict access to them by user roles.

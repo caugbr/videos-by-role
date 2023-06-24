@@ -8,6 +8,7 @@ Author URI:
 Text Domain: vbr
 */
 
+
 include "traits/admin-page.php";
 include "traits/post-type.php";
 
@@ -39,7 +40,8 @@ class VideosByRole {
                 array( 
                     'ajaxurl' => admin_url('admin-ajax.php'),
                     'nonce' => wp_create_nonce('videos-by-role'),
-                    'post_id' => $_GET['post'] ?? 0
+                    'post_id' => $_GET['post'] ?? 0,
+                    'providers' => $this->get_providers()
                 )
             );
             $providers_path = plugin_dir_path(__FILE__) . '/oembed-providers';
@@ -104,6 +106,10 @@ class VideosByRole {
 
     public function get_categories() {
         return get_option('vbr_categories', []);
+    }
+
+    public function get_providers() {
+        return get_option('vbr_providers', []);
     }
 
     public function add_category($cat) {

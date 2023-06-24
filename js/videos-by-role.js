@@ -4,7 +4,9 @@ window.vbrProviders = {};
 function providerNames() {
     let provs = [];
     for (const prov in vbrProviders) {
-        provs.push(vbrProviders[prov].name);
+        if (vbrInfo.providers.includes(prov)) {
+            provs.push(vbrProviders[prov].name);
+        }
     }
     return provs;
 }
@@ -130,9 +132,11 @@ function isApproximatelyEqual(a, b, epsilon = 0.05) {
 
 function getVideoId(url) {
     for (const prov in vbrProviders) {
-        if (vbrProviders[prov].reUrl.test(url)) {
-            const matches = url.match(vbrProviders[prov].reId);
-            return matches[1];
+        if (vbrInfo.providers.includes(prov)) {
+            if (vbrProviders[prov].reUrl.test(url)) {
+                const matches = url.match(vbrProviders[prov].reId);
+                return matches[1];
+            }
         }
     }
     return false;
@@ -140,8 +144,10 @@ function getVideoId(url) {
 
 function getVideoInfo(vid, url) {
     for (const prov in vbrProviders) {
-        if (vbrProviders[prov].reUrl.test(url)) {
-            return vbrProviders[prov].getInfo(vid);
+        if (vbrInfo.providers.includes(prov)) {
+            if (vbrProviders[prov].reUrl.test(url)) {
+                return vbrProviders[prov].getInfo(vid);
+            }
         }
     }
 }

@@ -27,11 +27,18 @@ trait admin_page {
                 $this->remove_role($_POST['role']);
                 $this->remove_category($_POST['role']);
                 $this->remove_capability($_POST['role']);
-                $msg = __('Level removed', 'vbr');
+                $msg = __('User level successfully removed', 'vbr');
+            }
+            if ($_POST['act'] == 'save-config') {
+                if (!empty($_POST['providers'])) {
+                    update_option('vbr_providers', $_POST['providers']);
+                $msg = __('Used providers successfully saved', 'vbr');
+                }
             }
         }
         $roles = $this->get_roles();
         $caps = $this->get_capabilities();
+        $providers = $this->get_providers();
         ?>
         <script>
             var vbrRoles = <?php print json_encode($roles) ?>;
@@ -106,6 +113,51 @@ trait admin_page {
                 <input type="hidden" name="cat_name" id="cat_name">
                 <input type="hidden" name="cat_slug" id="cat_slug">
                 <input type="hidden" value="add-role" name="act">
+            </form>
+            <h2><?php _e('Supported video providers', 'vbr') ?></h2>
+            <form method="post" action="options-general.php?page=video-options">
+                <table class="form-table">
+                    <tbody>
+                        <tr>
+                            <th><?php _e('Current providers', 'vbr') ?></th>
+                            <td>
+                                <ul class="providers">
+                                    <?php
+                                        $providers_path = WP_PLUGIN_DIR . '/videos-by-role/oembed-providers';
+                                        $provs = array_diff(scandir($providers_path), array('..', '.'));
+                                        foreach ($provs as $prv) {
+                                            $prov = str_replace('.js', '', $prv);
+                                            $path = $providers_path . '/' . $prv;
+                                            $js = file_get_contents($path);
+                                            if (preg_match("/name: *[\"']([^\"']+)[\"']/", $js, $matches)) {
+                                                ?>
+                                                <li>
+                                                    <label for="providers-<?php print $prov; ?>">
+                                                        <input 
+                                                        type="checkbox" 
+                                                        name="providers[]" 
+                                                        id="providers-<?php print $prov; ?>"
+                                                        value="<?php print $prov; ?>"
+                                                        <?php if (in_array($prov, $providers)) print 'checked'; ?>
+                                                    >
+                                                        <span><?php print $matches[1]; ?></span>
+                                                    </label>
+                                                </li>
+                                                <?php
+                                            }
+                                        }
+                                    ?>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="buttons">
+                                <input type="submit" id="submit" value="<?php _e('Save', 'vbr') ?>" class="button button-primary button-large">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" value="save-config" name="act">
             </form>
             <form method="post" id="role_form" action="options-general.php?page=video-options">
                 <input type="hidden" id="role_act" name="act">
