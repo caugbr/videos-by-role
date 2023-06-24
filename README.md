@@ -14,4 +14,4 @@ The fields and button bellow the text box will be available in a few seconds, th
 You will need to choose a category before saving your video. Only one category is allowed, but you can create user roles with access to more than one category.
 
 ## Access to the videos
-Only admins and users of the roles we created will be able to watch the videos. Administrators will have access to all of them, but other users will only see what their capabilities allow.
+Only administrators and users of the roles we created will be able to watch the videos. Administrators will have access to all of them, but other users will only see what their capabilities allow.
