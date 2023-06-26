@@ -36,7 +36,7 @@ window.addEventListener('load', function() {
             document.querySelector('#role_slug').value = slug;
             document.querySelector('#role_form').submit();
         });
-    })
+    });
 
     const removeButtons = document.querySelectorAll('.role .actions .remove-role');
     Array.from(removeButtons).forEach(button => {
@@ -48,8 +48,20 @@ window.addEventListener('load', function() {
                 document.querySelector('#role_form').submit();
             }
         });
-    })
+    });
+
+    document.querySelector('#edit-post-type').addEventListener('click', function(evt) {
+        evt.preventDefault();
+        evt.target.style.display = 'none';
+        document.querySelector('.post-type-data').style.display = 'block';
+    });
 });
+
+function removeCorsDomain(evt) {
+    evt.preventDefault();
+    const li = evt.target.closest('li');
+    li.parentElement.removeChild(li);
+}
 
 function getRoleNames() {
     if (undefined === window.vbrRoles) {

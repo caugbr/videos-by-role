@@ -30,10 +30,11 @@ trait admin_page {
                 $msg = __('User level successfully removed', 'vbr');
             }
             if ($_POST['act'] == 'save-config') {
-                if (!empty($_POST['providers'])) {
-                    update_option('vbr_providers', $_POST['providers']);
-                $msg = __('Used providers successfully saved', 'vbr');
-                }
+                update_option('vbr_providers', $_POST['providers'] ?? []);
+                update_option('vbr_post_type', $_POST['post_type_slug'] ?? 'video');
+                update_option('vbr_post_type_name', $_POST['post_type_name'] ?? 'Video');
+                update_option('vbr_post_type_plural', $_POST['post_type_plural'] ?? 'Videos');
+                $msg = __('Configuration successfully saved', 'vbr');
             }
         }
         return $msg;
@@ -74,8 +75,8 @@ trait admin_page {
                     </div>
                 <?php } ?>
             </div>
-            <h2><?php _e('Create user level', 'vbr') ?></h2>
             <form method="post" action="options-general.php?page=video-options">
+                <h2><?php _e('Create user level', 'vbr') ?></h2>
                 <table class="form-table">
                     <tbody>
                         <tr>
@@ -119,8 +120,8 @@ trait admin_page {
                 <input type="hidden" name="cat_slug" id="cat_slug">
                 <input type="hidden" value="add-role" name="act">
             </form>
-            <h2><?php _e('Supported video providers', 'vbr') ?></h2>
             <form method="post" action="options-general.php?page=video-options">
+                <h2><?php _e('Supported video providers', 'vbr') ?></h2>
                 <table class="form-table">
                     <tbody>
                         <tr>
@@ -155,6 +156,55 @@ trait admin_page {
                                 </ul>
                             </td>
                         </tr>
+                    </tbody>
+                </table>
+                <?php
+                $pt_slug = get_option('vbr_post_type', 'video');
+                $pt_name = get_option('vbr_post_type_name', 'Video');
+                $pt_plural = get_option('vbr_post_type_plural', 'Videos');
+                ?>
+                <a href="#" id="edit-post-type"><?php _e('Change post type name', 'vbr') ?></a>
+                <div class="post-type-data" style="display: none;">
+                    <h2><?php _e('Edit post type name', 'vbr') ?></h2>
+                    <table class="form-table">
+                        <tbody>
+                            <tr>
+                                <th><?php _e('Post type slug', 'vbr') ?></th>
+                                <td>
+                                    <input 
+                                        type="text" 
+                                        name="post_type_slug" 
+                                        id="post_type_slug" 
+                                        class="regular-text ltr" 
+                                        value="<?php print $pt_slug; ?>"
+                                    >
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><?php _e('Post type name', 'vbr') ?></th>
+                                <td><input 
+                                    type="text" 
+                                    name="post_type_name" 
+                                    id="post_type_name" 
+                                    class="regular-text ltr" 
+                                    value="<?php print $pt_name; ?>"
+                                ></td>
+                            </tr>
+                            <tr>
+                                <th><?php _e('Post type plural', 'vbr') ?></th>
+                                <td><input 
+                                    type="text" 
+                                    name="post_type_plural" 
+                                    id="post_type_plural" 
+                                    class="regular-text ltr" 
+                                    value="<?php print $pt_plural; ?>"
+                                ></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table class="form-table">
+                    <tbody>
                         <tr>
                             <td colspan="2" class="buttons">
                                 <input type="submit" id="submit" value="<?php _e('Save', 'vbr') ?>" class="button button-primary button-large">

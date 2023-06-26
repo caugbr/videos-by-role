@@ -5,17 +5,17 @@ trait post_type {
     public function register_post_type() {
         if (!post_type_exists('video')) {
             $labels = array(
-                'name' => __('Videos', 'vbr'),
-                'singular_name' => __('Video', 'vbr'),
-                'menu_name' => __('Videos', 'vbr'),
-                'add_new' => __('Add New', 'vbr'),
-                'add_new_item' => __('Add New Video', 'vbr'),
-                'edit_item' => __('Edit Video', 'vbr'),
-                'new_item' => __('New Video', 'vbr'),
-                'view_item' => __('View Video', 'vbr'),
-                'search_items' => __('Search Videos', 'vbr'),
-                'not_found' => __('No videos found', 'vbr'),
-                'not_found_in_trash' => __('No videos found in trash', 'vbr'),
+                'name' => $this->post_type_plural,
+                'singular_name' => $this->post_type_name,
+                'menu_name' => $this->post_type_plural,
+                'add_new' => __('Add new', 'vbr'),
+                'add_new_item' => sprintf(__('Add new %s', 'vbr'), $this->post_type),
+                'edit_item' => sprintf(__('Edit %s', 'vbr'), $this->post_type),
+                'new_item' => sprintf(__('New %s', 'vbr'), $this->post_type),
+                'view_item' => sprintf(__('View %s', 'vbr'), $this->post_type),
+                'search_items' => sprintf(__('Search %s', 'vbr'), strtolower($this->post_type_plural)),
+                'not_found' => sprintf(__('No %s found', 'vbr'), strtolower($this->post_type_plural)),
+                'not_found_in_trash' => sprintf(__('No %s found in trash', 'vbr'), strtolower($this->post_type_plural)),
                 'parent_item_colon' => '',
             );
     
@@ -25,22 +25,22 @@ trait post_type {
                 'has_archive' => true,
                 'publicly_queryable' => true,
                 'query_var' => true,
-                'rewrite' => array('slug' => 'videos'),
+                'rewrite' => array('slug' => strtolower($this->post_type_plural)),
                 'capability_type' => 'post',
                 'map_meta_cap' => true,
                 'supports' => array('title', 'editor', 'thumbnail'),
                 'menu_icon' => 'dashicons-video-alt3',
                 'show_in_rest' => false // must be false to use the old editor
             );
-            register_post_type('video', $args);
+            register_post_type($this->post_type, $args);
         }
 
         if (!taxonomy_exists('video_category')) {
             $taxonomy_args = array(
                 'hierarchical' => true,
                 'labels' => array(
-                    'name' => __('Video Categories', 'vbr'),
-                    'singular_name' => __('Video Category', 'vbr'),
+                    'name' => __('Categories', 'vbr'),
+                    'singular_name' => __('Category', 'vbr'),
                     'menu_name' => __('Categories', 'vbr'),
                     'all_items' => __('All Categories', 'vbr'),
                     'edit_item' => __('Edit Category', 'vbr'),
@@ -58,16 +58,19 @@ trait post_type {
                     'not_found' => __('No categories found', 'vbr'),
                 ),
                 'public' => true,
-                'rewrite' => array('slug' => 'video-category'),
+                'rewrite' => array('slug' => $this->post_type . '-category'),
                 'show_admin_column' => true,
-                'show_in_menu' => false // hide categories
+                'show_in_menu' => false // hide categories from user
             );
-            register_taxonomy('video_category', 'video', $taxonomy_args);
+            register_taxonomy('video_category', $this->post_type, $taxonomy_args);
         }
     }
     
     public function add_video_meta_box() {
-        add_meta_box('vbr-video', __('Import video', 'vbr'), [$this, 'video_meta_box_html'], 'video', 'advanced');
+        $providers = $this->get_providers();
+        if (count($providers) > 0) {
+            add_meta_box('vbr-video', __('Import video', 'vbr'), [$this, 'video_meta_box_html'], $this->post_type, 'advanced');
+        }
     }
 
     public function video_meta_box_html($post) {

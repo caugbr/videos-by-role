@@ -24,64 +24,68 @@ window.addEventListener('load', function() {
         return true;
     }, true);
 
-    const label = this.document.querySelector('label[for="vbr_video"]');
-    const links = providerLinks().join(', ');
-    label.innerHTML = label.innerHTML.replace('%providers_list%', links);
-
-    // get video info when user fill the video id or url
-    const input = document.querySelector('input#vbr_video');
-    const ratio_width = document.querySelector('input#video_width');
-    const ratio_height = document.querySelector('input#video_height');
-    let aspect_ratio = 0;
-    const inputFn = function(evt) {
-        evt.target.classList.remove('error');
-        const url = evt.target.value;
-        const vid = getVideoId(url);
-        if (vid) {
-            getVideoInfo(vid, url).then(info => {
-                if (info === false) {
-                    noVideo();
-                } else {
-                    showImageButton(info.thumbnail_url);
-                    showSetTitleButton(info.title);
-                    showAddButton(info.html);
-                    ratio_width.value = info.width;
-                    ratio_height.value = info.height;
-                    aspect_ratio = info.height / info.width;
-                    document.querySelector('.video-size').classList.remove('disabled');
-                }
-            });
-        } else {
-            noVideo();
+    const label = document.querySelector('label[for="vbr_video"]');
+    if (label) {
+        const links = providerLinks().join(', ');
+        console.log('links', links)
+        label.innerHTML = label.innerHTML.replace('%providers_list%', links);
+        console.log('label.innerHTML', label.innerHTML)
+    
+        // get video info when user fill the video id or url
+        const input = document.querySelector('input#vbr_video');
+        const ratio_width = document.querySelector('input#video_width');
+        const ratio_height = document.querySelector('input#video_height');
+        let aspect_ratio = 0;
+        const inputFn = function(evt) {
+            evt.target.classList.remove('error');
+            const url = evt.target.value;
+            const vid = getVideoId(url);
+            if (vid) {
+                getVideoInfo(vid, url).then(info => {
+                    if (info === false) {
+                        noVideo();
+                    } else {
+                        showImageButton(info.thumbnail_url);
+                        showSetTitleButton(info.title);
+                        showAddButton(info.html);
+                        ratio_width.value = info.width;
+                        ratio_height.value = info.height;
+                        aspect_ratio = info.height / info.width;
+                        document.querySelector('.video-size').classList.remove('disabled');
+                    }
+                });
+            } else {
+                noVideo();
+            }
+        };
+        input.addEventListener('change', inputFn);
+        if (input.value) {
+            input.dispatchEvent(new Event('change'));
         }
-    };
-    input.addEventListener('change', inputFn);
-    if (input.value) {
-        input.dispatchEvent(new Event('change'));
+        // force fields to preserve proportional size
+        document.querySelector('input#video_size-responsive').addEventListener('click', function() {
+            ratio_width.disabled = true;
+            ratio_height.disabled = true;
+        });
+        document.querySelector('input#video_size-fixed').addEventListener('click', function() {
+            ratio_width.disabled = false;
+            ratio_height.disabled = false;
+        });
+        const rw_func = function() {
+            const new_width = parseInt(ratio_width.value);
+            const new_height = Math.round(new_width * aspect_ratio);
+            ratio_height.value = new_height;
+        };
+        ratio_width.addEventListener('change', rw_func);
+        ratio_width.addEventListener('keyup', rw_func);
+        const rh_func = function() {
+            const new_height = parseInt(ratio_height.value);
+            const new_width = Math.round(new_height / aspect_ratio);
+            ratio_width.value = new_width;
+        };
+        ratio_height.addEventListener('change', rh_func);
+        ratio_height.addEventListener('keyup', rh_func);
     }
-    // force fields to preserve proportional size
-    document.querySelector('input#video_size-responsive').addEventListener('click', function() {
-        ratio_width.disabled = true;
-        ratio_height.disabled = true;
-    });
-    document.querySelector('input#video_size-fixed').addEventListener('click', function() {
-        ratio_width.disabled = false;
-        ratio_height.disabled = false;
-    });
-    const rw_func = function() {
-        const new_width = parseInt(ratio_width.value);
-        const new_height = Math.round(new_width * aspect_ratio);
-        ratio_height.value = new_height;
-    };
-    ratio_width.addEventListener('change', rw_func);
-    ratio_width.addEventListener('keyup', rw_func);
-    const rh_func = function() {
-        const new_height = parseInt(ratio_height.value);
-        const new_width = Math.round(new_height / aspect_ratio);
-        ratio_width.value = new_width;
-    };
-    ratio_height.addEventListener('change', rh_func);
-    ratio_height.addEventListener('keyup', rh_func);
     
     // select only one category
     const checkboxes = document.querySelectorAll('#video_categorychecklist input[type="checkbox"]');

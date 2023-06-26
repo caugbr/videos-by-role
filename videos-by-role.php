@@ -17,16 +17,36 @@ class VideosByRole {
     use admin_page;
     use post_type;
 
+    var $post_type = 'video';
+    var $post_type_name = 'Video';
+    var $post_type_plural = 'Videos';
+
     public function __construct() {
+        $this->set_post_type_names();
         add_action('init', [$this, 'load_textdomain']);
         add_action('init', [$this, 'register_post_type']);
-        add_action('add_meta_boxes_video', [$this, 'add_video_meta_box']);
-        add_action('save_post_video', [$this, 'save_video_metadata']);
+        add_action('add_meta_boxes_' . $this->post_type, [$this, 'add_video_meta_box']);
+        add_action('save_post_' . $this->post_type, [$this, 'save_video_metadata']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_custom_script']);
         add_action('admin_menu', [$this, 'videos_admin_page']);
         add_action('wp_ajax_thumbnail_url', [$this, 'thumbnail_url']);
         add_action('pre_get_posts', [$this, 'modify_video_query']);
         add_action('wp_head', [$this, 'responsive_video_css']);
+    }
+
+    private function set_post_type_names() {
+        $post_type = get_option('vbr_post_type');
+        if ($post_type) {
+            $this->post_type = $post_type;
+        }
+        $post_type_name = get_option('vbr_post_type_name');
+        if ($post_type_name) {
+            $this->post_type_name = $post_type_name;
+        }
+        $post_type_plural = get_option('vbr_post_type_plural');
+        if ($post_type_plural) {
+            $this->post_type_plural = $post_type_plural;
+        }
     }
 
     function load_textdomain() {
@@ -35,7 +55,7 @@ class VideosByRole {
     
     public function enqueue_custom_script() {
         $screen = get_current_screen();
-        if ($screen->id === 'video') {
+        if ($screen->id === $this->post_type) {
             wp_enqueue_script('axios', 'https://unpkg.com/axios/dist/axios.min.js');
             wp_enqueue_script('videos-by-role', plugins_url('js/videos-by-role.js', __FILE__));
             wp_localize_script('videos-by-role', 'vbrInfo',
@@ -43,11 +63,12 @@ class VideosByRole {
                     'ajaxurl' => admin_url('admin-ajax.php'),
                     'nonce' => wp_create_nonce('videos-by-role'),
                     'post_id' => $_GET['post'] ?? 0,
-                    'providers' => $this->get_providers()
+                    'providers' => $this->get_providers(),
+                    'post_type' => $this->post_type
                 )
             );
             $providers_path = plugin_dir_path(__FILE__) . '/oembed-providers';
-            $providers = array_diff(scandir($providers_path), array('..', '.'));
+            $providers = array_diff(scandir($providers_path), ['..', '.']);
             foreach ($providers as $prov) {
                 $url = plugins_url('oembed-providers/' . $prov, __FILE__);
                 wp_enqueue_script('videos-by-role-' . str_replace('.js', '', $prov), $url);
@@ -106,12 +127,28 @@ class VideosByRole {
         return false;
     }
 
+    private function get_option_array($name) {
+        $opt = get_option($name);
+        if (!$opt) {
+            return [];
+        }
+        return $opt;
+    }
+
     private function get_categories() {
-        return get_option('vbr_categories', []);
+        $opt = get_option('vbr_categories');
+        if (!$opt) {
+            return [];
+        }
+        return $opt;
     }
 
     private function get_providers() {
-        return get_option('vbr_providers', []);
+        $opt = get_option('vbr_providers');
+        if (!$opt) {
+            return [];
+        }
+        return $opt;
     }
 
     private function add_category($cat) {
@@ -187,7 +224,7 @@ class VideosByRole {
     }
 
     public function modify_video_query($query) {
-        if (!is_admin() && !$this->is_site_admin() && (is_singular('video') || is_post_type_archive('video'))) {
+        if (!is_admin() && !$this->is_site_admin() && (is_singular($this->post_type) || is_post_type_archive($this->post_type))) {
             $allowed = $this->get_allowed_cats();
             if (!empty($allowed)) {
                 $tax_query = [
