@@ -32,6 +32,7 @@ class VideosByRole {
         add_action('wp_ajax_thumbnail_url', [$this, 'thumbnail_url']);
         add_action('pre_get_posts', [$this, 'modify_video_query']);
         add_action('wp_head', [$this, 'responsive_video_css']);
+        add_filter('use_block_editor_for_post_type', [$this, 'disable_gutenberg'], 10, 2);
     }
 
     private function set_post_type_names() {
@@ -57,15 +58,15 @@ class VideosByRole {
         $screen = get_current_screen();
         if ($screen->id === $this->post_type) {
             wp_enqueue_script('axios', 'https://unpkg.com/axios/dist/axios.min.js');
-            wp_enqueue_script('videos-by-role', plugins_url('js/videos-by-role.js', __FILE__));
+            wp_enqueue_script('videos-by-role', plugins_url("js/videos-by-role.js", __FILE__));
             wp_localize_script('videos-by-role', 'vbrInfo',
-                array( 
+                [
                     'ajaxurl' => admin_url('admin-ajax.php'),
                     'nonce' => wp_create_nonce('videos-by-role'),
                     'post_id' => $_GET['post'] ?? 0,
                     'providers' => $this->get_providers(),
                     'post_type' => $this->post_type
-                )
+                ]
             );
             $providers_path = plugin_dir_path(__FILE__) . '/oembed-providers';
             $providers = array_diff(scandir($providers_path), ['..', '.']);

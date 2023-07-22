@@ -30,7 +30,7 @@ trait post_type {
                 'map_meta_cap' => true,
                 'supports' => array('title', 'editor', 'thumbnail'),
                 'menu_icon' => 'dashicons-video-alt3',
-                'show_in_rest' => false // must be false to use the old editor
+                'show_in_rest' => true // must be false to use the old editor
             );
             register_post_type($this->post_type, $args);
         }
@@ -60,6 +60,8 @@ trait post_type {
                 'public' => true,
                 'rewrite' => array('slug' => $this->post_type . '-category'),
                 'show_admin_column' => true,
+                'show_in_rest' => true,
+                'query_var' => true,
                 'show_in_menu' => false // hide categories from user
             );
             register_taxonomy('video_category', $this->post_type, $taxonomy_args);
@@ -154,7 +156,8 @@ trait post_type {
                 flex-wrap: nowrap;
             }
             .col {
-                width: 50%;
+                flex-grow: 2;
+                flex-shrink: 2;
             }
             .col:last-child {
                 width: 50%;text-align: right;
@@ -176,11 +179,15 @@ trait post_type {
         if (!isset($_POST['vbr_video_nonce']) || ! wp_verify_nonce($_POST['vbr_video_nonce'], 'vbr_video_nonce')) {
             return;
         }
-        if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || !isset( $_POST['vbr_video'])) {
+        if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || !isset($_POST['vbr_video'])) {
             return;
         }
     
         $video = sanitize_text_field($_POST['vbr_video']);
         update_post_meta($post_id, '_vbr_video', $video);
+    }
+
+    public function disable_gutenberg($current_status, $post_type) {
+        return 'video' == $post_type ? false : $current_status;
     }
 }
